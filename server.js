@@ -5,11 +5,7 @@ const app = express();
 app.use(express.json());
 
 const VERIFY_TOKEN = "myverifytoken";
-
-/*
-PASTE YOUR PAGE ACCESS TOKEN BELOW
-*/
-const PAGE_ACCESS_TOKEN = "IGAAZCAzczDoP9BZAFptRjZAHN2NhLWpCWThFb1VyVi1zbFJHdFFINVdJMnMxY2hpTzEzVE5lOU1oMWwyTHowOHByb1FvdXROWmpaNUZAJUHNsam5LbXlFTFRZAQ3JiR3B4M1puc1hNT0FlUjhMU0JHVTZATMnVld2hjd3hPYkczaTRiWQZDZD";
+const PAGE_ACCESS_TOKEN = "IGAAZCAzczDoP9BZAGFGU05vR1NGS3JqREVfWGNGMGRRbDVobmJyd18zdUtGTF9KLTc4cld1QUNrNGx4NzdTY2lJbVZAsVnd3SzQ4YV9HT210VnRqMWVuNWRTRFUwbjRpYjE4OXg2MTFWaVo1ZAHNCZAVp6VUlwM3FwdW5OS1F4a2wtVQZDZD";
 
 
 // VERIFY WEBHOOK
@@ -26,16 +22,16 @@ app.get("/webhook", (req, res) => {
 });
 
 
-// RECEIVE EVENTS
+// RECEIVE WEBHOOK EVENTS
 app.post("/webhook", async (req, res) => {
 
   try {
 
-    const entry = req.body.entry;
+    const entries = req.body.entry;
 
-    for (const item of entry) {
+    for (const entry of entries) {
 
-      const changes = item.changes;
+      const changes = entry.changes;
 
       for (const change of changes) {
 
@@ -43,19 +39,20 @@ app.post("/webhook", async (req, res) => {
 
           const commentText = change.value.text?.toLowerCase();
 
-          // IF USER COMMENTS "link"
-         if (
-  commentText &&
-  commentText.toLowerCase().includes("guide")
-) {
+          // DETECT "guide"
+          if (
+            commentText &&
+            commentText.includes("guide")
+          ) {
 
             const commentId = change.value.id;
+            const userId = change.value.from.id;
 
-            // PUBLIC REPLY
+            // PUBLIC COMMENT REPLY
             await axios.post(
               `https://graph.facebook.com/v23.0/${commentId}/replies`,
               {
-                message: "Sent you a DM 😊"
+                message: "Check your DMs 😊"
               },
               {
                 params: {
@@ -64,7 +61,36 @@ app.post("/webhook", async (req, res) => {
               }
             );
 
-            console.log("Reply sent");
+            console.log("Comment reply sent");
+
+
+            // SEND DM
+            await axios.post(
+              `https://graph.facebook.com/v23.0/me/messages`,
+              {
+                recipient: {
+                  id: userId
+                },
+                message: {
+                  text: `Assalamualayikum! 
+Jazakallahu khairan for your interest 💖
+
+Here’s the guide you requested:
+
+https://raisingmuslimkids.gumroad.com/l/zjqbpa
+
+Hope it helps! Let me know if you have any questions 😊`
+                },
+                messaging_type: "RESPONSE"
+              },
+              {
+                params: {
+                  access_token: PAGE_ACCESS_TOKEN
+                }
+              }
+            );
+
+            console.log("DM sent");
           }
         }
       }
@@ -73,7 +99,11 @@ app.post("/webhook", async (req, res) => {
     res.sendStatus(200);
 
   } catch (error) {
-    console.log(error.response?.data || error.message);
+
+    console.log(
+      error.response?.data || error.message
+    );
+
     res.sendStatus(500);
   }
 });

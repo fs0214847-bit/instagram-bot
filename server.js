@@ -44,7 +44,10 @@ app.post("/webhook", async (req, res) => {
           const commentText = change.value.text?.toLowerCase();
 
           // IF USER COMMENTS "link"
-          if (commentText && commentText.includes("link")) {
+         if (
+  commentText &&
+  commentText.toLowerCase().includes("guide")
+) {
 
             const commentId = change.value.id;
 

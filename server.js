@@ -1,3 +1,4 @@
+const PAGE_ID = "61583734860178";
 const express = require("express");
 const axios = require("axios");
 
@@ -49,30 +50,14 @@ app.post("/webhook", async (req, res) => {
             const userId = change.value.from.id;
 
             // PUBLIC COMMENT REPLY
-            await axios.post(
-              `https://graph.facebook.com/v23.0/${commentId}/replies`,
-              {
-                message: "Check your DMs 😊"
-              },
-              {
-                params: {
-                  access_token: PAGE_ACCESS_TOKEN
-                }
-              }
-            );
-
-            console.log("Comment reply sent");
-
-
-            // SEND DM
-            await axios.post(
-              `https://graph.facebook.com/v23.0/me/messages`,
-              {
-                recipient: {
-                  id: userId
-                },
-                message: {
-                  text: `Assalamualayikum! 
+           await axios.post(
+  `https://graph.facebook.com/v23.0/${PAGE_ID}/messages`,
+  {
+    recipient: {
+      comment_id: commentId
+    },
+    message: {
+      text: `Assalamualayikum! 
 Jazakallahu khairan for your interest 💖
 
 Here’s the guide you requested:
@@ -80,15 +65,14 @@ Here’s the guide you requested:
 https://raisingmuslimkids.gumroad.com/l/zjqbpa
 
 Hope it helps! Let me know if you have any questions 😊`
-                },
-                messaging_type: "RESPONSE"
-              },
-              {
-                params: {
-                  access_token: PAGE_ACCESS_TOKEN
-                }
-              }
-            );
+    }
+  },
+  {
+    params: {
+      access_token: PAGE_ACCESS_TOKEN
+    }
+  }
+);
 
             console.log("DM sent");
           }

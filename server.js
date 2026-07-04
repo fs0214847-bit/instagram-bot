@@ -53,7 +53,10 @@ app.post("/webhook", async (req, res) => {
     await axios.post(
   `https://graph.facebook.com/v23.0/${commentId}/replies`,
   {
-    message: "Check your DMs 😊"
+    message: "Assalamualayikum 😊
+
+Here’s the guide:
+https://raisingmuslimkids.gumroad.com/l/zjqbpa"
   },
   {
     params: {

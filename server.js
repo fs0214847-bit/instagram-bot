@@ -50,22 +50,10 @@ app.post("/webhook", async (req, res) => {
             const userId = change.value.from.id;
 
             // PUBLIC COMMENT REPLY
-           await axios.post(
-  `https://graph.facebook.com/v23.0/${PAGE_ID}/messages`,
+    await axios.post(
+  `https://graph.facebook.com/v23.0/${commentId}/replies`,
   {
-    recipient: {
-      comment_id: commentId
-    },
-    message: {
-      text: `Assalamualayikum! 
-Jazakallahu khairan for your interest 💖
-
-Here’s the guide you requested:
-
-https://raisingmuslimkids.gumroad.com/l/zjqbpa
-
-Hope it helps! Let me know if you have any questions 😊`
-    }
+    message: "Check your DMs 😊"
   },
   {
     params: {
@@ -73,7 +61,6 @@ Hope it helps! Let me know if you have any questions 😊`
     }
   }
 );
-
             console.log("DM sent");
           }
         }

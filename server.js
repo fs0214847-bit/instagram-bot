@@ -50,13 +50,10 @@ app.post("/webhook", async (req, res) => {
             const userId = change.value.from.id;
 
             // PUBLIC COMMENT REPLY
-    await axios.post(
+  await axios.post(
   `https://graph.facebook.com/v23.0/${commentId}/replies`,
   {
-    message: "Assalamualayikum 😊
-
-Here’s the guide:
-https://raisingmuslimkids.gumroad.com/l/zjqbpa"
+    message: "Assalamualayikum 😊 Here’s the guide: https://raisingmuslimkids.gumroad.com/l/zjqbpa"
   },
   {
     params: {
